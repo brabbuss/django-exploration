@@ -52,3 +52,12 @@ app's `admin.py` at startup.
 No error, but no models in the admin. `admin.register` is a decorator for a
 `ModelAdmin` class, so calling it bare builds a decorator and discards it. The
 direct call is `admin.site.register([...])`.
+
+## Coming from Node
+
+### No `await` in the request code
+
+Standard Django is synchronous: each request runs on its own thread, so a
+database call just blocks that thread until it returns. The request code is
+simpler because it's synchronous, and the concurrency you have to think about
+moves to the database (transactions and row locks) and the task queue (saya AI - Celery, that's next).
