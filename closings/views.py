@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -25,16 +26,19 @@ class SignatureViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"])
     def sign(self, request, pk=None):
-        signature: Signature = self.get_object()
+        with transaction.atomic():
+            signature: Signature = self.get_object()
+            document = Document.objects.select_for_update().get(pk=signature.document_id)
+            # need the signature to get the doc id, to get the lock, so refresh after the lock
+            signature.refresh_from_db()
+            if signature.signed_at is not None:
+                return Response({"detail": "Signature already signed."}, status=400)
+            
+            signature.signed_at = timezone.now()
+            signature.save()
 
-        if signature.signed_at is not None:
-            return Response({"detail": "Signature already signed."}, status=400)
-        signature.signed_at = timezone.now()
-        signature.save()
-        document = signature.document
-        has_unsigned = document.signatures.filter(signed_at__isnull=True).exists()
-
-        if not has_unsigned:
-            document.status = Document.Status.SIGNED
-            document.save()
-        return Response(self.get_serializer(signature).data)
+            has_unsigned = document.signatures.filter(signed_at__isnull=True).exists()
+            if not has_unsigned:
+                document.status = Document.Status.SIGNED
+                document.save()
+            return Response(self.get_serializer(signature).data)
