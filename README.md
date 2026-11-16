@@ -1,7 +1,9 @@
 # django-exploration
 
-A small Django app for learning the stack: a toy version of a deal closing, where
-documents collect signatures and a background job compiles the result.
+Learning Django and Python, coming from TypeScript and Node.
+
+The app is a toy version of a deal closing: documents collect signatures and a
+background job compiles the result.
 
 Stack: Python 3.12, Django 6.1, Django REST Framework, Postgres 17, Celery 5 with Redis.
 
