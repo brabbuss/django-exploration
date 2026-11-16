@@ -9,11 +9,11 @@ Stack: Python 3.12, Django 6.1, Django REST Framework, Postgres 17, Celery 5 wit
 
 - `config/` – the Django project. `settings.py` points at Postgres and Redis, and
   `rest_framework` and `closings` are in `INSTALLED_APPS`.
-- `config/celery.py` and `config/__init__.py` – the standard Celery wiring. Read these
-  two files once; they are short and an interviewer may ask how tasks get discovered.
+- `config/celery.py` and `config/__init__.py` – the standard Celery wiring. They are
+  short and show how tasks get discovered.
 - `closings/` – an empty app from `startapp`. Everything you write goes here.
 - `docker-compose.yml` – Postgres on 5432 and Redis on 6379.
-- Django's built-in migrations are applied. There are no models, views, tasks or tests yet.
+- The scaffold stops there. Models, views, tasks and tests are the exercise.
 
 ## Commands
 
@@ -55,8 +55,7 @@ how a query count changes with `select_related` and `prefetch_related`.
   now signed, move the document to `signed`.
 
 Worth noticing: why the lock goes on the Document row and not the Signature, and
-what happens to two concurrent sign requests without it. This is the same problem
-as the run-state migration.
+what happens to two concurrent sign requests without it.
 
 ### 3. One Celery task (about 1 hour) – `closings/tasks.py`
 
@@ -78,7 +77,3 @@ instance.
 
 Mark tests with `@pytest.mark.django_db`; pytest-django creates a throwaway test
 database for you.
-
-## If time runs short
-
-Do 1 and 2 fully. Drop tests first, then Celery.
