@@ -1,4 +1,4 @@
-# simply_apply
+# django-exploration
 
 A small Django app for learning the stack: a toy version of a deal closing, where
 documents collect signatures and a background job compiles the result.
